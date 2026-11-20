@@ -22,13 +22,13 @@ En enda container: nginx (webbsida, hemlig sökväg, QR-sida, affischer) + Pocke
 
 ## 2. Installera på Unraid
 
-Hämta mallen till Unraid (repot måste vara publikt för den här raden – annars kopiera filen `unraid/filmkvall.xml` dit manuellt):
+Hämta mallen till Unraid (repot måste vara publikt för den här raden – annars kopiera filen `unraid/movienight.xml` dit manuellt):
 
 ```bash
-wget -O /boot/config/plugins/dockerMan/templates-user/my-Filmkvall.xml https://raw.githubusercontent.com/Bloodcarver/movienight/main/unraid/filmkvall.xml
+wget -O /boot/config/plugins/dockerMan/templates-user/my-Movienight.xml https://raw.githubusercontent.com/Bloodcarver/movienight/main/unraid/movienight.xml
 ```
 
-Sedan i Unraid: **Docker → Add Container → Template:** välj **Filmkvall** under *User templates*. Fyll i:
+Sedan i Unraid: **Docker → Add Container → Template:** välj **Movienight** under *User templates*. Fyll i:
 
 - **Jellyfin URL** – t.ex. `http://192.168.0.14:8096`
 - **Jellyfin API-nyckel** – Jellyfin → Kontrollpanelen → API-nycklar → **+**
@@ -37,11 +37,11 @@ Sedan i Unraid: **Docker → Add Container → Template:** välj **Filmkvall** u
 
 Tryck **Apply**.
 
-Utan mall går det också att fylla i **Add Container** för hand: Repository `ghcr.io/bloodcarver/movienight:latest`, port 8095 → 80, port 8091 → 8090, sökväg `/mnt/user/appdata/filmkvall` → `/data`, samt variablerna i tabellen längre ner.
+Utan mall går det också att fylla i **Add Container** för hand: Repository `ghcr.io/bloodcarver/movienight:latest`, port 8095 → 80, port 8091 → 8090, sökväg `/mnt/user/appdata/movienight` → `/data`, samt variablerna i tabellen längre ner.
 
 ## 3. Hitta den hemliga adressen
 
-Docker-fliken → klicka på Filmkvall-ikonen → **Logs**. Där står:
+Docker-fliken → klicka på Movienight-ikonen → **Logs**. Där står:
 
 ```
 Filmkväll: appen finns på  /AbC123.../
@@ -75,7 +75,7 @@ Pusha ändringar till GitHub → vänta tills Actions är klar → Unraid Docker
 
 ## Byta hemlig adress
 
-Ta bort `/mnt/user/appdata/filmkvall/secret/secret.txt` (eller fyll i *Egen hemlig sökväg*) och starta om containern. Gamla QR-koder slutar då fungera.
+Ta bort `/mnt/user/appdata/movienight/secret/secret.txt` (eller fyll i *Egen hemlig sökväg*) och starta om containern. Gamla QR-koder slutar då fungera.
 
 ## Inställningar
 
@@ -95,7 +95,7 @@ Ta bort `/mnt/user/appdata/filmkvall/secret/secret.txt` (eller fyll i *Egen heml
 
 - **"Kunde inte hämta filmer från Jellyfin"** – kolla Jellyfin URL (ska nås från containern, inte `localhost`) och API-nyckeln. Prova att fylla i Jellyfin användar-id. Se loggen.
 - **Inga affischer** – samma sak, nginx hämtar dem från Jellyfin URL.
-- **Säkerhetskopia** – kopiera `/mnt/user/appdata/filmkvall`. Allt finns där.
+- **Säkerhetskopia** – kopiera `/mnt/user/appdata/movienight`. Allt finns där.
 
 ## Köra med docker compose i stället
 

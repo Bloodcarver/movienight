@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Container version="2">
-  <Name>Filmkvall</Name>
+  <Name>Movienight</Name>
   <Repository>ghcr.io/bloodcarver/movienight:latest</Repository>
   <Registry>https://github.com/Bloodcarver/movienight/pkgs/container/movienight</Registry>
   <Network>bridge</Network>
@@ -13,7 +13,7 @@
   <Icon>https://raw.githubusercontent.com/Bloodcarver/movienight/main/unraid/icon.png</Icon>
   <Config Name="Webbport" Target="80" Default="8095" Mode="tcp" Description="Porten appen svarar på. Peka Nginx Proxy Manager hit." Type="Port" Display="always" Required="true" Mask="false">8095</Config>
   <Config Name="Adminport (PocketBase)" Target="8090" Default="8091" Mode="tcp" Description="Adminpanelen på /_/ . Öppna ALDRIG den här porten i routern." Type="Port" Display="advanced" Required="false" Mask="false">8091</Config>
-  <Config Name="Data" Target="/data" Default="/mnt/user/appdata/filmkvall" Mode="rw" Description="Databas och hemlig sökväg. Säkerhetskopiera den här mappen." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/filmkvall</Config>
+  <Config Name="Data" Target="/data" Default="/mnt/user/appdata/movienight" Mode="rw" Description="Databas och hemlig sökväg. Säkerhetskopiera den här mappen." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/movienight</Config>
   <Config Name="Jellyfin URL" Target="JELLYFIN_URL" Default="http://192.168.0.14:8096" Mode="" Description="Jellyfins adress så som containern når den (inte localhost)." Type="Variable" Display="always" Required="true" Mask="false">http://192.168.0.14:8096</Config>
   <Config Name="Jellyfin API-nyckel" Target="JELLYFIN_API_KEY" Default="" Mode="" Description="Jellyfin: Kontrollpanelen, API-nycklar, +" Type="Variable" Display="always" Required="true" Mask="true"></Config>
   <Config Name="TMDB API-nyckel" Target="TMDB_API_KEY" Default="" Mode="" Description="Gratis på themoviedb.org, Inställningar, API. Tom = inget favoritsteg." Type="Variable" Display="always" Required="false" Mask="true"></Config>
