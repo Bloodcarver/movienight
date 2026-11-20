@@ -31,6 +31,23 @@ function cleanName(v) {
 
 // ---------- Jellyfin ----------
 
+// Jellyfin kan ha genrer på både engelska och svenska. Slå ihop till svenska.
+const GENRE_SV = {
+  "action": "Action", "adventure": "Äventyr", "animation": "Animerat", "anime": "Animerat",
+  "comedy": "Komedi", "crime": "Kriminal", "documentary": "Dokumentär", "drama": "Drama",
+  "family": "Familj", "fantasy": "Fantasy", "history": "Historisk", "horror": "Skräck",
+  "music": "Musik", "musical": "Musikal", "mystery": "Mystik", "romance": "Romantik",
+  "science fiction": "Science Fiction", "sci-fi": "Science Fiction", "sci-fi & fantasy": "Science Fiction",
+  "thriller": "Thriller", "tv movie": "TV-film", "war": "Krig", "war & politics": "Krig",
+  "western": "Västern", "action & adventure": "Action", "kids": "Familj", "sport": "Sport",
+  "biography": "Biografi", "suspense": "Thriller", "disaster": "Katastrof",
+};
+
+function normGenre(g) {
+  g = String(g || "").trim();
+  return GENRE_SV[g.toLowerCase()] || g;
+}
+
 function jellyfinHeaders() {
   return {
     "Accept": "application/json",
@@ -69,7 +86,7 @@ function library() {
       overview: (i.Overview || "").slice(0, 600),
       rating: i.CommunityRating ? Math.round(i.CommunityRating * 10) / 10 : null,
       age: i.OfficialRating || "",
-      genres: i.Genres || [],
+      genres: (i.Genres || []).map(normGenre).filter((g, k, a) => g && a.indexOf(g) === k),
       runtime: i.RunTimeTicks ? Math.round(i.RunTimeTicks / 600000000) : null,
       tmdb: String(pid.Tmdb || pid.tmdb || pid.TMDB || ""),
       poster: !!(i.ImageTags && i.ImageTags.Primary),
