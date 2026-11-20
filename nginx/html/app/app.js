@@ -310,13 +310,34 @@ function updatePeople() {
 
 // ---------- Val av favoriter och genrer ----------
 
+// Kom ihåg favoriter och genrer per namn i webbläsaren till nästa gång.
+function prefsKey(name) { return String(name || "").trim().toLowerCase(); }
+function loadAllPrefs() { try { return JSON.parse(localStorage.getItem("filmkvall_prefs") || "{}"); } catch (_) { return {}; } }
+function rememberPrefs(name, favorites, genres) {
+  try {
+    const all = loadAllPrefs();
+    all[prefsKey(name)] = { favorites: favorites, genres: genres };
+    localStorage.setItem("filmkvall_prefs", JSON.stringify(all));
+  } catch (_) {}
+}
+
 function showPrefs() {
+  let restored = false;
   if (state.me.ready || editingPrefs) {
     favs = state.me.favorites.slice();
     pickedGenres = new Set(state.me.genres);
+  } else if (!favs.length && !pickedGenres.size) {
+    const saved = loadAllPrefs()[prefsKey(state.me.name)];
+    if (saved) {
+      const known = new Set(config.genres.map((g) => g.name));
+      favs = (saved.favorites || []).slice(0, MAX_FAVS);
+      pickedGenres = new Set((saved.genres || []).filter((g) => known.has(g)));
+      restored = favs.length > 0 || pickedGenres.size > 0;
+    }
   }
   setView("prefs", `
     ${shareBox()}
+    ${restored ? `<p class="muted small">Dina val från förra gången är ifyllda. Ändra eller tryck Klar.</p>` : ""}
     ${config.tmdb ? `
       <h2>Dina favoritfilmer</h2>
       <p class="muted small">Välj ${MIN_FAVS}–${MAX_FAVS} filmer du älskar. De kan vara vilka filmer som helst.</p>
@@ -388,6 +409,7 @@ function showPrefs() {
     ready.disabled = true;
     try {
       state = await api("/rooms/" + encodeURIComponent(session.code) + "/prefs", { favorites: favs, genres: [...pickedGenres] });
+      rememberPrefs(state.me.name, favs, [...pickedGenres]);
       editingPrefs = false;
       render();
     } catch (e) { toast(e.message); ready.disabled = false; }
