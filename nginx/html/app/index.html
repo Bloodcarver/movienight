@@ -12,8 +12,8 @@
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="apple-touch-icon" href="icon.png">
   <title>Filmkväll</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="themes.css">
+  <link rel="stylesheet" href="style.css?v=__APPVER__">
+  <link rel="stylesheet" href="themes.css?v=__APPVER__">
 </head>
 <body>
   <header class="top">
@@ -21,9 +21,10 @@
     <span id="roomTag" class="room-tag" hidden></span>
   </header>
   <main id="app"><p class="muted center">Laddar…</p></main>
+  <footer id="ver" class="ver"></footer>
   <div id="toast" class="toast" hidden></div>
-  <script src="qrcode.min.js"></script>
+  <script src="qrcode.min.js?v=__APPVER__"></script>
   <script src="public.js"></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=__APPVER__"></script>
 </body>
 </html>

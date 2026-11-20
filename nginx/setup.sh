@@ -40,7 +40,9 @@ if [ -n "$PUBLIC" ] && ! printf '%s' "$PUBLIC" | grep -Eq '^https?://[A-Za-z0-9.
   echo "Filmkväll: FEL - PUBLIC_URL ska se ut som https://film.example.se (utan sökväg)" >&2
   exit 1
 fi
-printf 'window.FILMKVALL_PUBLIC_URL = "%s";\n' "$PUBLIC" > "$OUT/public.js"
+VERSION=$(printf '%s' "${APP_VERSION:-dev}" | tr -dc 'A-Za-z0-9.' | cut -c1-7)
+printf 'window.FILMKVALL_PUBLIC_URL = "%s";\nwindow.FILMKVALL_VERSION = "%s";\n' "$PUBLIC" "$VERSION" > "$OUT/public.js"
+echo "Filmkväll: version $VERSION"
 
 # --- Nätverk som får se QR-sidan, och betrodda proxyer ---
 valid_net() { printf '%s' "$1" | grep -Eq '^[0-9a-fA-F:.]+(/[0-9]{1,3})?$'; }
@@ -65,10 +67,10 @@ case "$RESOLVER" in
 esac
 
 # --- Bygg filerna ---
-awk -v s="$SECRET" -v dns="$RESOLVER" -v jf="$JF" -v k="$JFKEY" -v qr="$QR_LINES" -v rip="$RIP_LINES" '
+awk -v s="$SECRET" -v ver="$VERSION" -v dns="$RESOLVER" -v jf="$JF" -v k="$JFKEY" -v qr="$QR_LINES" -v rip="$RIP_LINES" '
   /^#__QR_NETS__/ { printf "%s", qr; next }
   /^#__REAL_IP__/ { printf "%s", rip; next }
-  { gsub(/__SECRET__/, s); gsub(/__RESOLVER__/, dns); gsub(/__JELLYFIN__/, jf); gsub(/__JFKEY__/, k); print }
+  { gsub(/__SECRET__/, s); gsub(/__VERSION__/, ver); gsub(/__RESOLVER__/, dns); gsub(/__JELLYFIN__/, jf); gsub(/__JFKEY__/, k); print }
 ' "$SRC/filmkvall.conf.template" > "$NGINX_CONF"
 
 sed "s/__SECRET__/$SECRET/g" "$SRC/lan.html.template" > "$OUT/lan.html"

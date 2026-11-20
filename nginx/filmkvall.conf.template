@@ -45,7 +45,9 @@ server {
     location /__SECRET__/ {
         alias /usr/share/nginx/html/app/;
         index index.html;
-        add_header Cache-Control "no-cache" always;
+        sub_filter '__APPVER__' '__VERSION__';
+        sub_filter_once off;
+        add_header Cache-Control "no-store" always;
         add_header X-Robots-Tag "noindex, nofollow" always;
     }
 
@@ -53,7 +55,7 @@ server {
     location = /__SECRET__/public.js {
         alias /filmkvall/generated/public.js;
         default_type application/javascript;
-        add_header Cache-Control "no-cache" always;
+        add_header Cache-Control "no-store" always;
         add_header X-Robots-Tag "noindex, nofollow" always;
     }
 

@@ -181,3 +181,5 @@ button.link { background: none; padding: 6px 0; color: var(--muted); text-decora
 
 /* Härledda färger räknas om per tema (sätts på body, där temat ligger) */
 body { --head-color: var(--text); --head-font: var(--font); --input-bg: var(--bg); }
+
+.ver { text-align: center; font-size: 11px; color: var(--muted); opacity: .7; padding: 8px 16px calc(12px + env(safe-area-inset-bottom)); }

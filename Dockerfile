@@ -3,6 +3,7 @@ FROM nginx:1.27-alpine
 
 ARG PB_VERSION=0.40.6
 ARG TARGETARCH
+ARG APP_VERSION=dev
 
 RUN apk add --no-cache ca-certificates tzdata unzip wget \
  && ARCH="${TARGETARCH:-amd64}" \
@@ -19,7 +20,8 @@ COPY nginx/html /usr/share/nginx/html
 COPY nginx/filmkvall.conf.template nginx/lan.html.template nginx/setup.sh /filmkvall/
 COPY start.sh /start.sh
 
-ENV SECRET_DIR=/data/secret \
+ENV APP_VERSION=${APP_VERSION} \
+    SECRET_DIR=/data/secret \
     QR_ALLOWED_NETWORK=192.168.0.0/24 \
     TRUSTED_PROXY=172.16.0.0/12 \
     ROOM_TTL_HOURS=24 \

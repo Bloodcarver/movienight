@@ -33,6 +33,7 @@ let favs = [];
 let pickedGenres = new Set();
 let deck = [];                 // filmer kvar att swipa
 let deckTotal = 0;
+let lastActionAt = 0;          // när senaste ändringen skickades (för att ignorera gamla svar)
 
 // ---------- Hjälpfunktioner ----------
 
@@ -66,7 +67,7 @@ function toast(msg) {
 async function api(path, body) {
   const opts = { headers: { "Content-Type": "application/json" } };
   if (session && session.token) opts.headers["X-Token"] = session.token;
-  if (body !== undefined) { opts.method = "POST"; opts.body = JSON.stringify(body); }
+  if (body !== undefined) { opts.method = "POST"; opts.body = JSON.stringify(body); lastActionAt = Date.now(); }
   const res = await fetch(API + path, opts);
   let data = null;
   try { data = await res.json(); } catch (_) {}
@@ -108,8 +109,16 @@ function setView(name, html) {
 
 // ---------- Start ----------
 
+function storageWorks() {
+  try { localStorage.setItem("filmkvall_test", "1"); localStorage.removeItem("filmkvall_test"); return true; }
+  catch (_) { return false; }
+}
+
 async function init() {
   applyTheme(savedTheme());
+  const ver = document.getElementById("ver");
+  if (ver) ver.textContent = "Filmkväll " + (window.FILMKVALL_VERSION || "dev") +
+    (storageWorks() ? "" : " · den här webbläsaren kan inte spara dina val (privat läge?)");
   try { config = await api("/config"); }
   catch (e) { toast("Kunde inte nå servern: " + e.message); }
 
@@ -208,8 +217,10 @@ function stopPolling() { clearTimeout(pollTimer); pollTimer = null; }
 async function poll() {
   if (!session) return;
   try {
-    state = await api("/rooms/" + encodeURIComponent(session.code));
-    render();
+    const startedAt = Date.now();
+    const fresh = await api("/rooms/" + encodeURIComponent(session.code));
+    // Ett svar som skickades innan en egen ändring är inaktuellt - släng det.
+    if (startedAt >= lastActionAt && session) { state = fresh; render(); }
   } catch (e) {
     if (e.status === 403 || e.status === 404) {
       toast(e.message);
