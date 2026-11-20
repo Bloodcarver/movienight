@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <Container version="2">
   <Name>Filmkvall</Name>
-  <Repository>ghcr.io/bloodcarver/filmkvall:latest</Repository>
-  <Registry>https://github.com/Bloodcarver/filmkvall/pkgs/container/filmkvall</Registry>
+  <Repository>ghcr.io/bloodcarver/movienight:latest</Repository>
+  <Registry>https://github.com/Bloodcarver/movienight/pkgs/container/movienight</Registry>
   <Network>bridge</Network>
   <Privileged>false</Privileged>
-  <Support>https://github.com/Bloodcarver/filmkvall</Support>
-  <Project>https://github.com/Bloodcarver/filmkvall</Project>
+  <Support>https://github.com/Bloodcarver/movienight</Support>
+  <Project>https://github.com/Bloodcarver/movienight</Project>
   <Overview>Swipa fram kvällens film tillsammans. Alla väljer favoriter och genrer, appen föreslår filmer ur ert Jellyfin-bibliotek och filmen flest gillar vinner. Appen ligger på en hemlig adress (se loggen); startsidan visar en QR-kod bara för hemmanätet.</Overview>
   <Category>MediaApp:Video</Category>
   <WebUI>http://[IP]:[PORT:80]/</WebUI>
-  <Icon>https://raw.githubusercontent.com/Bloodcarver/filmkvall/main/unraid/icon.png</Icon>
+  <Icon>https://raw.githubusercontent.com/Bloodcarver/movienight/main/unraid/icon.png</Icon>
   <Config Name="Webbport" Target="80" Default="8095" Mode="tcp" Description="Porten appen svarar på. Peka Nginx Proxy Manager hit." Type="Port" Display="always" Required="true" Mask="false">8095</Config>
   <Config Name="Adminport (PocketBase)" Target="8090" Default="8091" Mode="tcp" Description="Adminpanelen på /_/ . Öppna ALDRIG den här porten i routern." Type="Port" Display="advanced" Required="false" Mask="false">8091</Config>
   <Config Name="Data" Target="/data" Default="/mnt/user/appdata/filmkvall" Mode="rw" Description="Databas och hemlig sökväg. Säkerhetskopiera den här mappen." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/filmkvall</Config>

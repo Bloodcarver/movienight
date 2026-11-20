@@ -12,12 +12,12 @@ En enda container: nginx (webbsida, hemlig sökväg, QR-sida, affischer) + Pocke
 
 ## 1. Lägg koden på GitHub
 
-1. Skapa ett nytt repo på github.com som heter `filmkvall` (kan vara privat).
+1. Skapa ett nytt repo på github.com, t.ex. `movienight` (kan vara privat).
 2. Pusha den här mappen dit.
 3. Under **Actions** i repot byggs imagen automatiskt (tar några minuter). Den hamnar på
-   `ghcr.io/<ditt-github-namn>/filmkvall:latest`.
+   `ghcr.io/bloodcarver/movienight:latest`.
 4. Gör imagen publik så att Unraid kan hämta den utan inloggning:
-   din profil → **Packages** → `filmkvall` → **Package settings** → *Change visibility* → **Public**.
+   din profil → **Packages** → `movienight` → **Package settings** → *Change visibility* → **Public**.
    (Koden i repot kan fortfarande vara privat.)
 
 ## 2. Installera på Unraid
@@ -25,7 +25,7 @@ En enda container: nginx (webbsida, hemlig sökväg, QR-sida, affischer) + Pocke
 Hämta mallen till Unraid (repot måste vara publikt för den här raden – annars kopiera filen `unraid/filmkvall.xml` dit manuellt):
 
 ```bash
-wget -O /boot/config/plugins/dockerMan/templates-user/my-Filmkvall.xml https://raw.githubusercontent.com/Bloodcarver/filmkvall/main/unraid/filmkvall.xml
+wget -O /boot/config/plugins/dockerMan/templates-user/my-Filmkvall.xml https://raw.githubusercontent.com/Bloodcarver/movienight/main/unraid/filmkvall.xml
 ```
 
 Sedan i Unraid: **Docker → Add Container → Template:** välj **Filmkvall** under *User templates*. Fyll i:
@@ -37,7 +37,7 @@ Sedan i Unraid: **Docker → Add Container → Template:** välj **Filmkvall** u
 
 Tryck **Apply**.
 
-Utan mall går det också att fylla i **Add Container** för hand: Repository `ghcr.io/bloodcarver/filmkvall:latest`, port 8095 → 80, port 8091 → 8090, sökväg `/mnt/user/appdata/filmkvall` → `/data`, samt variablerna i tabellen längre ner.
+Utan mall går det också att fylla i **Add Container** för hand: Repository `ghcr.io/bloodcarver/movienight:latest`, port 8095 → 80, port 8091 → 8090, sökväg `/mnt/user/appdata/filmkvall` → `/data`, samt variablerna i tabellen längre ner.
 
 ## 3. Hitta den hemliga adressen
 

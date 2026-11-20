@@ -1,4 +1,4 @@
-# Bygger Docker-imagen och lägger den på ghcr.io/<ditt-github-namn>/filmkvall:latest
+# Bygger Docker-imagen och lägger den på ghcr.io/<ägare>/<repo>:latest
 # varje gång något pushas till main (eller när du kör den manuellt under Actions).
 name: Bygg Docker-image
 
@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Imagenamn i små bokstäver
-        run: echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/filmkvall" >> "$GITHUB_ENV"
+        run: echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
 
       - uses: docker/setup-qemu-action@v3
       - uses: docker/setup-buildx-action@v3
