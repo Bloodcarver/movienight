@@ -169,3 +169,15 @@ button.link { background: none; padding: 6px 0; color: var(--muted); text-decora
   border: 1px solid var(--line); background: var(--input-bg); color: var(--text); max-width: 65%;
 }
 .home-theme { width: 100%; max-width: none; padding: 12px 14px; font-size: 16px; }
+
+/* Text på swipekorten ligger alltid på mörk toning över affischen, oavsett tema */
+.card .info { color: #fff; }
+.card .title { color: #fff; }
+.card .meta { color: #ece6f5; }
+.card .why { color: #ffd27a; }
+.card .overview { color: #f1ecf8; }
+.card .tags span { color: #fff; }
+.card .fallback { color: #fff; }
+
+/* Härledda färger räknas om per tema (sätts på body, där temat ligger) */
+body { --head-color: var(--text); --head-font: var(--font); --input-bg: var(--bg); }
