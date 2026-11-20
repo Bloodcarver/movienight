@@ -49,6 +49,14 @@ server {
         add_header X-Robots-Tag "noindex, nofollow" always;
     }
 
+    # Publik adress för QR-koderna (genereras vid start)
+    location = /__SECRET__/public.js {
+        alias /filmkvall/generated/public.js;
+        default_type application/javascript;
+        add_header Cache-Control "no-cache" always;
+        add_header X-Robots-Tag "noindex, nofollow" always;
+    }
+
     # Bara appens egna API-routes släpps fram till PocketBase
     location /__SECRET__/api/film/ {
         proxy_pass http://127.0.0.1:8090/api/film/;

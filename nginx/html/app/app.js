@@ -64,7 +64,7 @@ async function api(path, body) {
 }
 
 function roomLink(code) {
-  return location.origin + location.pathname + "?r=" + encodeURIComponent(code);
+  return (window.FILMKVALL_PUBLIC_URL || location.origin) + location.pathname + "?r=" + encodeURIComponent(code);
 }
 
 function qrSvg(text) {

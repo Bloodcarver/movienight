@@ -28,8 +28,10 @@
     <p class="ip">Den här sidan syns bara hemifrån. Du uppfattas som <b>__CLIENT_IP__</b>.</p>
   </div>
   <script src="/__SECRET__/qrcode.min.js"></script>
+  <script src="/__SECRET__/public.js"></script>
   <script>
-    var url = location.origin + "/__SECRET__/";
+    var url = (window.FILMKVALL_PUBLIC_URL || location.origin) + "/__SECRET__/";
+    document.getElementById("open").href = url;
     document.getElementById("link").textContent = url;
     var qr = qrcode(0, "M"); qr.addData(url); qr.make();
     document.getElementById("qr").innerHTML = qr.createSvgTag({ cellSize: 4, margin: 0, scalable: true });

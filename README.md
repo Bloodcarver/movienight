@@ -81,6 +81,7 @@ Ta bort `/mnt/user/appdata/movienight/secret/secret.txt` (eller fyll i *Egen hem
 
 | Variabel | Standard | Betydelse |
 |---|---|---|
+| `PUBLIC_URL` | tom | Adressen utifrån, t.ex. `https://movienight.omniware.se`. QR-koderna pekar hit |
 | `JELLYFIN_URL` / `JELLYFIN_API_KEY` | – | Jellyfin |
 | `JELLYFIN_USER_ID` | tom | Behövs bara om filmlistan blir tom/ger fel |
 | `TMDB_API_KEY` | tom | Tom = inget favoritsteg, förslag bara utifrån genrer |

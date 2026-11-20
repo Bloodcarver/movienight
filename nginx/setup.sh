@@ -34,6 +34,14 @@ if [ -z "$JF" ] || [ -z "$JFKEY" ]; then
 fi
 case "$JF" in http://*|https://*) ;; *) echo "Filmkväll: FEL - JELLYFIN_URL måste börja med http:// eller https://" >&2; exit 1;; esac
 
+# --- Publik adress (används i QR-koderna) ---
+PUBLIC=$(printf '%s' "${PUBLIC_URL:-}" | sed 's:/*$::')
+if [ -n "$PUBLIC" ] && ! printf '%s' "$PUBLIC" | grep -Eq '^https?://[A-Za-z0-9.-]+(:[0-9]+)?$'; then
+  echo "Filmkväll: FEL - PUBLIC_URL ska se ut som https://film.example.se (utan sökväg)" >&2
+  exit 1
+fi
+printf 'window.FILMKVALL_PUBLIC_URL = "%s";\n' "$PUBLIC" > "$OUT/public.js"
+
 # --- Nätverk som får se QR-sidan, och betrodda proxyer ---
 valid_net() { printf '%s' "$1" | grep -Eq '^[0-9a-fA-F:.]+(/[0-9]{1,3})?$'; }
 
@@ -65,6 +73,7 @@ awk -v s="$SECRET" -v dns="$RESOLVER" -v jf="$JF" -v k="$JFKEY" -v qr="$QR_LINES
 
 sed "s/__SECRET__/$SECRET/g" "$SRC/lan.html.template" > "$OUT/lan.html"
 
-echo "Filmkväll: appen finns på  /$SECRET/"
+echo "Filmkväll: appen finns på  ${PUBLIC}/$SECRET/"
+[ -n "$PUBLIC" ] || echo "Filmkväll: tips - sätt PUBLIC_URL så att QR-koderna pekar på din domän"
 echo "Filmkväll: QR-sidan på /  visas för: ${QR_ALLOWED_NETWORK:-192.168.0.0/24}"
 echo "Filmkväll: betrodda proxyer: ${TRUSTED_PROXY:-(inga)}"
