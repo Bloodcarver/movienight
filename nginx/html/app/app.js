@@ -137,6 +137,9 @@ function showHome(code) {
         <button class="primary block" id="join">Gå med</button>
         <button class="link" id="other">Skapa ett eget rum i stället</button>
       ` : `
+        <label for="homeTheme">Tema för rummet</label>
+        <select id="homeTheme" class="home-theme">${THEMES.map(([k, l]) =>
+          `<option value="${k}"${k === savedTheme() ? " selected" : ""}>${l}</option>`).join("")}</select>
         <button class="primary block" id="create">Skapa nytt rum</button>
         <div class="divider">eller gå med i ett rum</div>
         <div class="row">
@@ -153,6 +156,9 @@ function showHome(code) {
     rememberName(n);
     return n;
   };
+
+  const homeTheme = document.getElementById("homeTheme");
+  if (homeTheme) homeTheme.onchange = () => applyTheme(homeTheme.value); // förhandsvisning
 
   const create = document.getElementById("create");
   if (create) create.onclick = async () => {

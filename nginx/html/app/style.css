@@ -164,7 +164,8 @@ button.link { background: none; padding: 6px 0; color: var(--muted); text-decora
 
 /* Temaväljare */
 .theme-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; }
-.theme-row select {
+.theme-row select, .home-theme {
   font: inherit; font-size: 15px; padding: 8px 10px; border-radius: var(--btn-radius);
   border: 1px solid var(--line); background: var(--input-bg); color: var(--text); max-width: 65%;
 }
+.home-theme { width: 100%; max-width: none; padding: 12px 14px; font-size: 16px; }
