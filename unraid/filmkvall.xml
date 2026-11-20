@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>Filmkvall</Name>
+  <Repository>ghcr.io/bloodcarver/filmkvall:latest</Repository>
+  <Registry>https://github.com/Bloodcarver/filmkvall/pkgs/container/filmkvall</Registry>
+  <Network>bridge</Network>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/Bloodcarver/filmkvall</Support>
+  <Project>https://github.com/Bloodcarver/filmkvall</Project>
+  <Overview>Swipa fram kvällens film tillsammans. Alla väljer favoriter och genrer, appen föreslår filmer ur ert Jellyfin-bibliotek och filmen flest gillar vinner. Appen ligger på en hemlig adress (se loggen); startsidan visar en QR-kod bara för hemmanätet.</Overview>
+  <Category>MediaApp:Video</Category>
+  <WebUI>http://[IP]:[PORT:80]/</WebUI>
+  <Icon>https://raw.githubusercontent.com/Bloodcarver/filmkvall/main/unraid/icon.png</Icon>
+  <Config Name="Webbport" Target="80" Default="8095" Mode="tcp" Description="Porten appen svarar på. Peka Nginx Proxy Manager hit." Type="Port" Display="always" Required="true" Mask="false">8095</Config>
+  <Config Name="Adminport (PocketBase)" Target="8090" Default="8091" Mode="tcp" Description="Adminpanelen på /_/ . Öppna ALDRIG den här porten i routern." Type="Port" Display="advanced" Required="false" Mask="false">8091</Config>
+  <Config Name="Data" Target="/data" Default="/mnt/user/appdata/filmkvall" Mode="rw" Description="Databas och hemlig sökväg. Säkerhetskopiera den här mappen." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/filmkvall</Config>
+  <Config Name="Jellyfin URL" Target="JELLYFIN_URL" Default="http://192.168.0.14:8096" Mode="" Description="Jellyfins adress så som containern når den (inte localhost)." Type="Variable" Display="always" Required="true" Mask="false">http://192.168.0.14:8096</Config>
+  <Config Name="Jellyfin API-nyckel" Target="JELLYFIN_API_KEY" Default="" Mode="" Description="Jellyfin: Kontrollpanelen, API-nycklar, +" Type="Variable" Display="always" Required="true" Mask="true"></Config>
+  <Config Name="TMDB API-nyckel" Target="TMDB_API_KEY" Default="" Mode="" Description="Gratis på themoviedb.org, Inställningar, API. Tom = inget favoritsteg." Type="Variable" Display="always" Required="false" Mask="true"></Config>
+  <Config Name="Admin e-post" Target="PB_ADMIN_EMAIL" Default="" Mode="" Description="Inloggning till PocketBase adminpanel." Type="Variable" Display="always" Required="false" Mask="false"></Config>
+  <Config Name="Admin lösenord" Target="PB_ADMIN_PASSWORD" Default="" Mode="" Description="Minst 10 tecken." Type="Variable" Display="always" Required="false" Mask="true"></Config>
+  <Config Name="QR-sida för nät" Target="QR_ALLOWED_NETWORK" Default="192.168.0.0/24" Mode="" Description="Vilka nät som ser QR-koden på startsidan (kommaseparerat)." Type="Variable" Display="advanced" Required="false" Mask="false">192.168.0.0/24</Config>
+  <Config Name="Betrodda proxyer" Target="TRUSTED_PROXY" Default="192.168.0.14,172.16.0.0/12" Mode="" Description="NPM:s adress och Dockers interna nät." Type="Variable" Display="advanced" Required="false" Mask="false">192.168.0.14,172.16.0.0/12</Config>
+  <Config Name="Jellyfin användar-id" Target="JELLYFIN_USER_ID" Default="" Mode="" Description="Behövs bara om filmlistan blir tom." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="Rummets livslängd (timmar)" Target="ROOM_TTL_HOURS" Default="24" Mode="" Description="" Type="Variable" Display="advanced" Required="false" Mask="false">24</Config>
+  <Config Name="Antal filmer att swipa" Target="CANDIDATE_COUNT" Default="25" Mode="" Description="" Type="Variable" Display="advanced" Required="false" Mask="false">25</Config>
+  <Config Name="Egen hemlig sökväg" Target="APP_SECRET" Default="" Mode="" Description="Minst 12 tecken A-Z a-z 0-9. Tom = slumpas fram och sparas i /data/secret." Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
+</Container>

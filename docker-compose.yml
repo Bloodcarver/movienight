@@ -1,0 +1,15 @@
+# Alternativ till Unraid-mallen, om du hellre kör docker compose.
+name: filmkvall
+
+services:
+  filmkvall:
+    build: .
+    container_name: filmkvall
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "${PORT:-8095}:80"
+      # Adminpanelen (/_/). Öppna ALDRIG den här porten i routern.
+      - "${ADMIN_PORT:-8091}:8090"
+    volumes:
+      - ./data:/data

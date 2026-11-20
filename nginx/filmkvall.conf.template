@@ -1,0 +1,76 @@
+# Genereras av setup.sh vid start. Ändra inte i den genererade filen,
+# ändra i nginx/filmkvall.conf.template eller i .env.
+
+log_format filmkvall '$remote_addr (från $realip_remote_addr) "$request" $status';
+
+# Vilka adresser som räknas som "hemma" och får se QR-sidan på /
+geo $film_lan {
+    default 0;
+#__QR_NETS__
+}
+
+server {
+    listen 80 default_server;
+    server_name _;
+    server_tokens off;
+    absolute_redirect off;
+    access_log /dev/stdout filmkvall;
+
+    # Riktig besöksadress från betrodda proxyer (t.ex. Nginx Proxy Manager)
+#__REAL_IP__
+    real_ip_header X-Forwarded-For;
+    real_ip_recursive on;
+
+    resolver __RESOLVER__ valid=30s ipv6=off;
+
+    root /usr/share/nginx/html;
+    error_page 404 /404.html;
+    location = /404.html { internal; }
+
+    # Startsidan: QR-kod hemifrån, 404 för alla andra
+    location = / {
+        if ($film_lan = 0) { return 404; }
+        root /filmkvall/generated;
+        rewrite ^ /lan.html break;
+        default_type text/html;
+        sub_filter '__CLIENT_IP__' '$remote_addr';
+        sub_filter_once off;
+        add_header Cache-Control "no-store" always;
+        add_header X-Robots-Tag "noindex, nofollow" always;
+    }
+
+    # Själva appen bakom den hemliga sökvägen
+    location = /__SECRET__ { return 301 /__SECRET__/; }
+
+    location /__SECRET__/ {
+        alias /usr/share/nginx/html/app/;
+        index index.html;
+        add_header Cache-Control "no-cache" always;
+        add_header X-Robots-Tag "noindex, nofollow" always;
+    }
+
+    # Bara appens egna API-routes släpps fram till PocketBase
+    location /__SECRET__/api/film/ {
+        proxy_pass http://127.0.0.1:8090/api/film/;
+        proxy_set_header Host $host;
+        client_max_body_size 64k;
+        proxy_read_timeout 120s;
+        add_header Cache-Control "no-store" always;
+        add_header X-Robots-Tag "noindex, nofollow" always;
+    }
+
+    # Affischer hämtas från Jellyfin via servern, så Jellyfin behöver inte synas utåt
+    location ~ "^/__SECRET__/poster/([0-9a-fA-F-]{32,36})$" {
+        set $jf_item $1;
+        proxy_pass __JELLYFIN__/Items/$jf_item/Images/Primary?maxHeight=750&quality=85;
+        proxy_set_header Authorization 'MediaBrowser Token="__JFKEY__"';
+        proxy_set_header Cookie "";
+        proxy_hide_header Set-Cookie;
+        proxy_intercept_errors on;
+        add_header Cache-Control "public, max-age=86400" always;
+        add_header X-Robots-Tag "noindex, nofollow" always;
+    }
+
+    # Allt annat finns inte
+    location / { return 404; }
+}

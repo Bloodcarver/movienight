@@ -1,0 +1,9 @@
+{
+  "name": "Filmkväll",
+  "short_name": "Filmkväll",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#14111c",
+  "theme_color": "#14111c"
+}
