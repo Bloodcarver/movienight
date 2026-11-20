@@ -2,6 +2,7 @@
 // Logiken för Filmkväll. Laddas med require() inifrån varje route i film.pb.js.
 
 const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+const THEMES = ["bio", "modern", "retro", "rock", "rosa", "scifi", "noir", "western", "skrack", "jul", "strand", "terminal", "pastell", "rymd", "disco"];
 const LIB_CACHE_MS = 10 * 60 * 1000;
 
 function env(key, def) {
@@ -277,7 +278,18 @@ function addParticipant(room, name) {
   return p;
 }
 
-function createRoom(name) {
+function cleanTheme(t) {
+  t = String(t || "");
+  return THEMES.indexOf(t) >= 0 ? t : "bio";
+}
+
+function setTheme(room, me, theme) {
+  if (room.getString("host") !== me.id) throw new ForbiddenError("Bara den som skapade rummet kan byta tema.");
+  room.set("theme", cleanTheme(theme));
+  $app.save(room);
+}
+
+function createRoom(name, theme) {
   const col = $app.findCollectionByNameOrId("rooms");
   let room;
   for (let i = 0; i < 10; i++) {
@@ -289,6 +301,7 @@ function createRoom(name) {
     room = new Record(col);
     room.set("code", code);
     room.set("status", "lobby");
+    room.set("theme", cleanTheme(theme));
     room.set("candidates", []);
     $app.save(room);
     break;
@@ -397,6 +410,7 @@ function state(room, me) {
   const out = {
     code: room.getString("code"),
     status: status,
+    theme: cleanTheme(room.getString("theme")),
     tmdb: hasTmdb(),
     me: {
       id: me.id,
@@ -449,5 +463,5 @@ function cleanup() {
 
 module.exports = {
   genres, hasTmdb, searchMovies, createRoom, joinRoom, findRoom, findMe,
-  savePrefs, startSwiping, swipe, finish, state, cleanup,
+  savePrefs, startSwiping, swipe, finish, state, cleanup, setTheme,
 };

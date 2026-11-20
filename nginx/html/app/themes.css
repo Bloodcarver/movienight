@@ -1,0 +1,184 @@
+/* Teman ("skins") för rummen. Standard ("bio") ligger i style.css. */
+
+/* ---------- Modern (ljus) ---------- */
+body[data-theme="modern"] {
+  --bg: #f4f5f9; --panel: #ffffff; --panel-2: #eceef4; --line: #dfe2ea;
+  --text: #171923; --muted: #6a7184; --accent: #4f46e5; --accent-ink: #fff;
+  --like: #16a34a; --nope: #e11d48; --radius: 18px; --btn-radius: 12px;
+  --panel-border: 1px solid #e6e8ef; --input-bg: #fff;
+}
+body[data-theme="modern"] .panel { box-shadow: 0 4px 18px rgba(20, 25, 40, .06); }
+body[data-theme="modern"] .round { background: #fff; }
+
+/* ---------- Retro 80-tal ---------- */
+body[data-theme="retro"] {
+  --bg: #12062a; --panel: #1f0b45; --panel-2: #2d1160; --line: #5a2a9c;
+  --text: #f6e9ff; --muted: #b79be0; --accent: #ff2bd6; --accent-ink: #12062a;
+  --like: #22e4ff; --nope: #ff2bd6; --radius: 6px; --btn-radius: 4px;
+  --font: "Trebuchet MS", Verdana, sans-serif;
+  --head-font: "Courier New", monospace; --head-transform: uppercase; --head-spacing: .12em;
+  --head-color: #22e4ff; --head-shadow: 0 0 8px #22e4ff, 0 0 18px #ff2bd6;
+  --panel-border: 1px solid #ff2bd655;
+  --bg-image: linear-gradient(180deg, transparent 55%, rgba(255, 43, 214, .18) 100%),
+              repeating-linear-gradient(90deg, rgba(34, 228, 255, .09) 0 1px, transparent 1px 48px),
+              repeating-linear-gradient(0deg, rgba(34, 228, 255, .09) 0 1px, transparent 1px 48px);
+}
+
+/* ---------- Hårdrock ---------- */
+body[data-theme="rock"] {
+  --bg: #0b0b0b; --panel: #171717; --panel-2: #262626; --line: #3a3a3a;
+  --text: #ededed; --muted: #9a9a9a; --accent: #e10600; --accent-ink: #fff;
+  --like: #f5c400; --nope: #e10600; --radius: 3px; --btn-radius: 2px;
+  --head-font: Impact, "Arial Black", sans-serif; --head-transform: uppercase; --head-spacing: .04em;
+  --head-shadow: 2px 2px 0 #e10600;
+  --panel-border: 2px solid #2e2e2e;
+  --bg-image: radial-gradient(circle at 50% -10%, rgba(225, 6, 0, .25), transparent 60%);
+}
+body[data-theme="rock"] button.primary { text-transform: uppercase; letter-spacing: .08em; }
+
+/* ---------- Rosa glamour ---------- */
+body[data-theme="rosa"] {
+  --bg: #ffd6ec; --panel: #fff2f9; --panel-2: #ffe1f1; --line: #ffb3da;
+  --text: #5c0f3f; --muted: #a3487f; --accent: #ff2d95; --accent-ink: #fff;
+  --like: #d6008a; --nope: #8a8a8a; --radius: 28px; --btn-radius: 999px;
+  --font: "Trebuchet MS", "Segoe UI", sans-serif;
+  --head-font: Georgia, "Times New Roman", serif; --head-color: #e0007a;
+  --panel-border: 2px solid #ffc2e2; --input-bg: #fff;
+  --bg-image: radial-gradient(circle at 20% 10%, #ffffffaa 0 2px, transparent 3px),
+              radial-gradient(circle at 80% 30%, #ffffffaa 0 2px, transparent 3px),
+              linear-gradient(160deg, #ffe3f2, #ff9fcf);
+}
+body[data-theme="rosa"] h1 { font-style: italic; }
+body[data-theme="rosa"] .round { background: #fff; }
+
+/* ---------- Sci-fi konsol ---------- */
+body[data-theme="scifi"] {
+  --bg: #000; --panel: #000; --panel-2: #1c1424; --line: #9c9cff;
+  --text: #ffcc99; --muted: #cc99cc; --accent: #ff9c00; --accent-ink: #000;
+  --like: #99ccff; --nope: #cc6666; --radius: 0; --btn-radius: 999px;
+  --font: "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --head-font: "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --head-transform: uppercase; --head-spacing: .14em; --head-color: #ff9c00;
+}
+body[data-theme="scifi"] .panel {
+  border-left: 22px solid #cc99cc; border-top: 8px solid #cc99cc;
+  border-radius: 34px 0 0 0;
+}
+body[data-theme="scifi"] .panel:nth-of-type(even) { border-color: #9c9cff; }
+body[data-theme="scifi"] button { background: #9c9cff; color: #000; text-transform: uppercase; letter-spacing: .1em; }
+body[data-theme="scifi"] button.primary { background: #ff9c00; }
+body[data-theme="scifi"] button.link { background: none; color: #cc99cc; }
+body[data-theme="scifi"] .chip { background: #332244; color: #ffcc99; }
+body[data-theme="scifi"] .top { border-bottom: 10px solid #ff9c00; border-radius: 0 0 0 30px; }
+
+/* ---------- Film noir ---------- */
+body[data-theme="noir"] {
+  --bg: #0e0e0e; --panel: #1b1b1b; --panel-2: #2a2a2a; --line: #444;
+  --text: #e8e8e8; --muted: #9b9b9b; --accent: #f2f2f2; --accent-ink: #0e0e0e;
+  --like: #f2f2f2; --nope: #8c8c8c; --radius: 2px; --btn-radius: 2px;
+  --font: Georgia, "Times New Roman", serif;
+  --head-font: Georgia, "Times New Roman", serif; --head-transform: uppercase; --head-spacing: .2em;
+  --panel-border: 1px solid #3a3a3a;
+  --bg-image: repeating-linear-gradient(100deg, rgba(255, 255, 255, .035) 0 30px, transparent 30px 70px);
+}
+body[data-theme="noir"] .card img.poster { filter: grayscale(1) contrast(1.15); }
+
+/* ---------- Vilda västern ---------- */
+body[data-theme="western"] {
+  --bg: #e9d3a6; --panel: #f6e6c2; --panel-2: #e2c792; --line: #b98f52;
+  --text: #3d2410; --muted: #7a5530; --accent: #9c3d12; --accent-ink: #fbeed2;
+  --like: #4d7a2a; --nope: #9c3d12; --radius: 6px; --btn-radius: 6px;
+  --font: Georgia, serif;
+  --head-font: Rockwell, "Courier New", Georgia, serif; --head-transform: uppercase; --head-spacing: .08em;
+  --head-color: #6b2a0c;
+  --panel-border: 3px double #8a5a2b; --input-bg: #fbf1da;
+  --bg-image: repeating-linear-gradient(0deg, rgba(110, 70, 30, .06) 0 2px, transparent 2px 14px);
+}
+body[data-theme="western"] .round { background: #f6e6c2; }
+
+/* ---------- Skräck ---------- */
+body[data-theme="skrack"] {
+  --bg: #070405; --panel: #140809; --panel-2: #24100f; --line: #4d1414;
+  --text: #e9dcdc; --muted: #9b7676; --accent: #b30000; --accent-ink: #fff;
+  --like: #cfcfcf; --nope: #b30000; --radius: 4px; --btn-radius: 4px;
+  --head-font: "Chiller", "Papyrus", Georgia, serif; --head-color: #d10000;
+  --head-shadow: 0 0 12px rgba(209, 0, 0, .7);
+  --panel-border: 1px solid #3a0d0d;
+  --bg-image: radial-gradient(ellipse at 50% 0%, rgba(140, 0, 0, .35), transparent 65%);
+}
+
+/* ---------- Jul ---------- */
+body[data-theme="jul"] {
+  --bg: #0f3d2a; --panel: #fdf8ef; --panel-2: #f1e6d2; --line: #d9c9a8;
+  --text: #2a1a12; --muted: #7a6450; --accent: #c8102e; --accent-ink: #fff;
+  --like: #1e7a46; --nope: #c8102e; --radius: 18px; --btn-radius: 999px;
+  --head-font: Georgia, serif; --head-color: #fdf8ef; --input-bg: #fff;
+  --panel-border: 3px solid #c8102e;
+  --bg-image: radial-gradient(circle at 10% 20%, #fff 0 2px, transparent 3px),
+              radial-gradient(circle at 70% 10%, #fff 0 2px, transparent 3px),
+              radial-gradient(circle at 40% 60%, #fff 0 1.5px, transparent 2.5px),
+              radial-gradient(circle at 90% 75%, #fff 0 2px, transparent 3px);
+  background-size: 220px 220px;
+}
+body[data-theme="jul"] .panel h2, body[data-theme="jul"] .panel .big-code { color: #c8102e; }
+body[data-theme="jul"] .progress, body[data-theme="jul"] main > .muted, body[data-theme="jul"] main > p { color: #e8f3ec; }
+
+/* ---------- Strand ---------- */
+body[data-theme="strand"] {
+  --bg: #bfeff2; --panel: #fffaf0; --panel-2: #f5e7c8; --line: #e5cf9f;
+  --text: #0c3b47; --muted: #4f7c86; --accent: #ff7a59; --accent-ink: #fff;
+  --like: #0fa3a3; --nope: #ff7a59; --radius: 22px; --btn-radius: 999px;
+  --font: "Trebuchet MS", sans-serif; --head-color: #0b6f7c; --input-bg: #fff;
+  --bg-image: linear-gradient(180deg, #8fe3f0 0%, #c9f3f4 60%, #f4e2b8 100%);
+}
+body[data-theme="strand"] .round { background: #fff; }
+
+/* ---------- Hackerterminal ---------- */
+body[data-theme="terminal"] {
+  --bg: #020a02; --panel: #031203; --panel-2: #072407; --line: #0f5a0f;
+  --text: #33ff66; --muted: #1fae45; --accent: #33ff66; --accent-ink: #020a02;
+  --like: #33ff66; --nope: #ff3355; --radius: 0; --btn-radius: 0;
+  --font: "SF Mono", Menlo, Consolas, monospace;
+  --head-font: "SF Mono", Menlo, Consolas, monospace; --head-shadow: 0 0 6px #33ff66;
+  --panel-border: 1px solid #1a7a1a;
+  --bg-image: repeating-linear-gradient(0deg, rgba(51, 255, 102, .05) 0 1px, transparent 1px 3px);
+}
+body[data-theme="terminal"] h1::before { content: "> "; }
+body[data-theme="terminal"] .card img.poster { filter: grayscale(1) sepia(1) hue-rotate(70deg) saturate(3) brightness(.9); }
+
+/* ---------- Pastell ---------- */
+body[data-theme="pastell"] {
+  --bg: #f7f2fb; --panel: #ffffff; --panel-2: #eef3fb; --line: #e2dcef;
+  --text: #4a4458; --muted: #8e87a0; --accent: #a78bfa; --accent-ink: #fff;
+  --like: #6cc5a1; --nope: #f497a6; --radius: 24px; --btn-radius: 16px;
+  --font: "Avenir Next", "Segoe UI", sans-serif; --head-color: #7c6bc4; --input-bg: #fff;
+  --bg-image: radial-gradient(circle at 15% 15%, #ffe4ef, transparent 40%),
+              radial-gradient(circle at 85% 30%, #dff3ff, transparent 45%),
+              radial-gradient(circle at 50% 90%, #e8ffe9, transparent 45%);
+}
+body[data-theme="pastell"] .round { background: #fff; }
+
+/* ---------- Rymd ---------- */
+body[data-theme="rymd"] {
+  --bg: #050816; --panel: rgba(20, 26, 60, .75); --panel-2: #1e2652; --line: #34408a;
+  --text: #e6ebff; --muted: #97a2d8; --accent: #7dd3fc; --accent-ink: #050816;
+  --like: #86efac; --nope: #f472b6; --radius: 18px; --btn-radius: 999px;
+  --head-transform: uppercase; --head-spacing: .18em; --head-color: #c7d2fe;
+  --panel-border: 1px solid rgba(125, 211, 252, .25);
+  --bg-image: radial-gradient(circle at 12% 18%, #fff 0 1px, transparent 2px),
+              radial-gradient(circle at 63% 8%, #fff 0 1.5px, transparent 2.5px),
+              radial-gradient(circle at 82% 52%, #fff 0 1px, transparent 2px),
+              radial-gradient(circle at 34% 72%, #fff 0 1px, transparent 2px),
+              radial-gradient(ellipse at 70% 80%, rgba(139, 92, 246, .35), transparent 50%),
+              radial-gradient(ellipse at 20% 40%, rgba(56, 189, 248, .2), transparent 50%);
+}
+
+/* ---------- Disco 70-tal ---------- */
+body[data-theme="disco"] {
+  --bg: #2a1206; --panel: #3d1c0a; --panel-2: #5a2a10; --line: #8a4a1c;
+  --text: #ffe9c7; --muted: #e0a86a; --accent: #ffb000; --accent-ink: #2a1206;
+  --like: #ffb000; --nope: #ff5a1f; --radius: 30px; --btn-radius: 999px;
+  --head-font: "Cooper Black", "Bookman Old Style", Georgia, serif; --head-color: #ffb000;
+  --head-shadow: 2px 2px 0 #8a2a00;
+  --bg-image: repeating-linear-gradient(180deg, rgba(255, 90, 31, .07) 0 18px, rgba(255, 176, 0, .05) 18px 36px, transparent 36px 120px);
+}

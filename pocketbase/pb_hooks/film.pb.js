@@ -14,7 +14,8 @@ routerAdd("GET", "/api/film/search", (e) => {
 
 routerAdd("POST", "/api/film/rooms", (e) => {
   const lib = require(`${__hooks}/film_lib.js`);
-  const r = lib.createRoom(e.requestInfo().body.name);
+  const body = e.requestInfo().body;
+  const r = lib.createRoom(body.name, body.theme);
   return e.json(200, { code: r.room.getString("code"), token: r.me.getString("token") });
 });
 
@@ -35,6 +36,14 @@ routerAdd("POST", "/api/film/rooms/{code}/prefs", (e) => {
   const room = lib.findRoom(e.request.pathValue("code"));
   const me = lib.findMe(room, e);
   lib.savePrefs(room, me, e.requestInfo().body);
+  return e.json(200, lib.state(room, me));
+});
+
+routerAdd("POST", "/api/film/rooms/{code}/theme", (e) => {
+  const lib = require(`${__hooks}/film_lib.js`);
+  const room = lib.findRoom(e.request.pathValue("code"));
+  const me = lib.findMe(room, e);
+  lib.setTheme(room, me, e.requestInfo().body.theme);
   return e.json(200, lib.state(room, me));
 });
 

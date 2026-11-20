@@ -4,6 +4,21 @@ const API = "api/film";
 const POLL_MS = 2000;
 const MIN_FAVS = 3;
 const MAX_FAVS = 5;
+const THEMES = [
+  ["bio", "🎬 Bio"], ["modern", "◻️ Modern"], ["retro", "🕹️ Retro 80-tal"],
+  ["rock", "🤘 Hårdrock"], ["rosa", "💖 Rosa glamour"], ["scifi", "🖖 Sci-fi konsol"],
+  ["noir", "🕵️ Film noir"], ["western", "🤠 Vilda västern"], ["skrack", "🧛 Skräck"],
+  ["jul", "🎄 Jul"], ["strand", "🏖️ Strand"], ["terminal", "💻 Hackerterminal"],
+  ["pastell", "🧁 Pastell"], ["rymd", "🚀 Rymd"], ["disco", "🪩 Disco 70-tal"],
+];
+
+function applyTheme(t) {
+  if (!THEMES.some((x) => x[0] === t)) t = "bio";
+  if (document.body.dataset.theme !== t) document.body.dataset.theme = t;
+  try { localStorage.setItem("filmkvall_theme", t); } catch (_) {}
+}
+function savedTheme() { try { return localStorage.getItem("filmkvall_theme") || "bio"; } catch (_) { return "bio"; } }
+function themeLabel(t) { const x = THEMES.find((x) => x[0] === t); return x ? x[1] : t; }
 
 const app = document.getElementById("app");
 const roomTag = document.getElementById("roomTag");
@@ -94,6 +109,7 @@ function setView(name, html) {
 // ---------- Start ----------
 
 async function init() {
+  applyTheme(savedTheme());
   try { config = await api("/config"); }
   catch (e) { toast("Kunde inte nå servern: " + e.message); }
 
@@ -142,7 +158,7 @@ function showHome(code) {
   if (create) create.onclick = async () => {
     const n = getName(); if (!n) return;
     create.disabled = true;
-    try { enterRoom(await api("/rooms", { name: n })); }
+    try { enterRoom(await api("/rooms", { name: n, theme: savedTheme() })); }
     catch (e) { toast(e.message); create.disabled = false; }
   };
 
@@ -201,6 +217,11 @@ async function poll() {
 function render() {
   roomTag.hidden = false;
   roomTag.textContent = "Rum " + state.code;
+  applyTheme(state.theme);
+  const tsel = document.getElementById("themeSel");
+  if (tsel && document.activeElement !== tsel) tsel.value = state.theme;
+  const tlab = document.getElementById("themeName");
+  if (tlab) tlab.textContent = themeLabel(state.theme);
 
   if (state.status === "lobby") {
     if (!state.me.ready || editingPrefs) {
@@ -234,10 +255,23 @@ function shareBox() {
         <div class="big-code">${esc(state.code)}</div>
         <button id="share" style="margin-top:6px">Dela länk</button>
       </div>
+    </div>
+    <div class="panel theme-row">
+      <span class="muted small">Tema</span>
+      ${state.me.host
+        ? `<select id="themeSel" aria-label="Tema">${THEMES.map(([k, l]) =>
+            `<option value="${k}"${k === state.theme ? " selected" : ""}>${l}</option>`).join("")}</select>`
+        : `<span id="themeName">${esc(themeLabel(state.theme))}</span>`}
     </div>`;
 }
 
 function bindShare() {
+  const sel = document.getElementById("themeSel");
+  if (sel) sel.onchange = async () => {
+    applyTheme(sel.value); // direkt för värden, de andra får det vid nästa uppdatering
+    try { state = await api("/rooms/" + encodeURIComponent(session.code) + "/theme", { theme: sel.value }); }
+    catch (e) { toast(e.message); }
+  };
   const b = document.getElementById("share");
   if (!b) return;
   b.onclick = async () => {
