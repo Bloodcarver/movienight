@@ -30,7 +30,7 @@ wget -O /boot/config/plugins/dockerMan/templates-user/my-Movienight.xml https://
 
 Sedan i Unraid: **Docker → Add Container → Template:** välj **Movienight** under *User templates*. Fyll i:
 
-- **Jellyfin URL** – t.ex. `http://192.168.0.14:8096`
+- **Jellyfin URL** – t.ex. `http://192.168.0.114:8096`
 - **Jellyfin API-nyckel** – Jellyfin → Kontrollpanelen → API-nycklar → **+**
 - **TMDB API-nyckel** – gratis på themoviedb.org → Inställningar → API
 - **Admin e-post / lösenord** – för PocketBase adminpanel
@@ -47,14 +47,14 @@ Docker-fliken → klicka på Movienight-ikonen → **Logs**. Där står:
 Filmkväll: appen finns på  /AbC123.../
 ```
 
-Öppna `http://192.168.0.14:8095/` hemifrån – där visas QR-koden direkt (WebUI-knappen i Unraid går också dit).
+Öppna `http://192.168.0.114:8095/` hemifrån – där visas QR-koden direkt (WebUI-knappen i Unraid går också dit).
 
 ## 4. Nginx Proxy Manager (för att nå appen utifrån)
 
 Lägg till en **Proxy Host**:
 
 - Domain: `film.dindomän.se`
-- Scheme `http`, Forward Hostname/IP `192.168.0.14`, Port `8095`
+- Scheme `http`, Forward Hostname/IP `192.168.0.114`, Port `8095`
 - SSL: *Request a new SSL Certificate* + *Force SSL*
 
 Öppna **inte** adminporten (8091) i routern.
@@ -85,7 +85,7 @@ Ta bort `/mnt/user/appdata/movienight/secret/secret.txt` (eller fyll i *Egen hem
 | `JELLYFIN_URL` / `JELLYFIN_API_KEY` | – | Jellyfin |
 | `JELLYFIN_USER_ID` | tom | Behövs bara om filmlistan blir tom/ger fel |
 | `TMDB_API_KEY` | tom | Tom = inget favoritsteg, förslag bara utifrån genrer |
-| `PB_ADMIN_EMAIL` / `PB_ADMIN_PASSWORD` | tom | Admin till PocketBase (`http://192.168.0.14:8091/_/`) |
+| `PB_ADMIN_EMAIL` / `PB_ADMIN_PASSWORD` | tom | Admin till PocketBase (`http://192.168.0.114:8091/_/`) |
 | `QR_ALLOWED_NETWORK` | 192.168.0.0/24 | Vilka som ser QR-sidan på `/` |
 | `TRUSTED_PROXY` | 172.16.0.0/12 | Vems `X-Forwarded-For` vi litar på (lägg till NPM:s IP) |
 | `ROOM_TTL_HOURS` | 24 | Rum raderas efter så här många timmar |
