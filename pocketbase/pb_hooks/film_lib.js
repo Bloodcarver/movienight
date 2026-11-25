@@ -164,6 +164,26 @@ function recommendations(tmdbId) {
   return ids;
 }
 
+// Svensk beskrivning från TMDB. Tom sträng om TMDB saknar svensk text
+// (då används Jellyfins beskrivning i stället).
+function swedishOverview(tmdbId) {
+  if (!tmdbId || !hasTmdb()) return "";
+  const store = $app.store();
+  const key = "filmkvall_sv_" + tmdbId;
+  const cached = store.get(key);
+  if (cached !== null && cached !== undefined) return cached;
+  let text = "";
+  try {
+    const data = tmdb("/movie/" + tmdbId, {});
+    text = String((data && data.overview) || "").trim().slice(0, 600);
+  } catch (e) {
+    console.log("Filmkväll: kunde inte hämta svensk beskrivning för " + tmdbId);
+    return ""; // cacha inte fel, försök igen nästa gång
+  }
+  store.set(key, text);
+  return text;
+}
+
 // ---------- Förslag ----------
 
 function shuffle(arr) {
@@ -237,7 +257,7 @@ function buildCandidates(people) {
   return shuffle(picked.map((s) => {
     const m = s.movie;
     return {
-      id: m.id, title: m.title, year: m.year, overview: m.overview, rating: m.rating,
+      id: m.id, title: m.title, year: m.year, overview: swedishOverview(m.tmdb) || m.overview, rating: m.rating,
       age: m.age, genres: m.genres, runtime: m.runtime, poster: m.poster,
       because: s.because, genreMatches: s.genreMatches,
     };
