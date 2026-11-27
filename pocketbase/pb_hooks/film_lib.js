@@ -93,6 +93,16 @@ function library() {
     };
   });
 
+  // Komplettera med sparad TMDB-metadata (genrer som saknas i Jellyfin + svensk beskrivning).
+  const meta = hasTmdb() ? loadMeta() : {};
+  for (const m of items) {
+    const x = m.tmdb ? meta[m.tmdb] : null;
+    if (!x) continue;
+    for (const g of x.genres) if (m.genres.indexOf(g) < 0) m.genres.push(g);
+    m.metaChecked = true;
+    m.overviewSv = x.overview;
+  }
+
   store.set("filmkvall_library", JSON.stringify({ at: Date.now(), items: items }));
   return items;
 }
@@ -114,7 +124,7 @@ function hasTmdb() {
   return !!env("TMDB_API_KEY", "");
 }
 
-function tmdb(path, params) {
+function tmdbSend(path, params) {
   const key = env("TMDB_API_KEY", "");
   if (!key) throw new BadRequestError("TMDB_API_KEY saknas i .env");
   const headers = { "Accept": "application/json" };
@@ -124,7 +134,11 @@ function tmdb(path, params) {
   else url += "&api_key=" + encodeURIComponent(key);
   for (const k in params || {}) url += "&" + k + "=" + encodeURIComponent(params[k]);
 
-  const res = $http.send({ url: url, method: "GET", headers: headers, timeout: 15 });
+  return $http.send({ url: url, method: "GET", headers: headers, timeout: 15 });
+}
+
+function tmdb(path, params) {
+  const res = tmdbSend(path, params);
   if (res.statusCode !== 200) {
     console.log("Filmkväll: TMDB svarade " + res.statusCode + " på " + path);
     throw new ApiError(502, "TMDB svarade med fel (status " + res.statusCode + ").");
@@ -182,6 +196,74 @@ function swedishOverview(tmdbId) {
   }
   store.set(key, text);
   return text;
+}
+
+// ---------- TMDB-metadata i bakgrunden ----------
+
+// TMDB:s genre-id -> samma svenska namn som GENRE_SV ger.
+const TMDB_GENRE_SV = {
+  28: "Action", 12: "Äventyr", 16: "Animerat", 35: "Komedi", 80: "Kriminal", 99: "Dokumentär",
+  18: "Drama", 10751: "Familj", 14: "Fantasy", 36: "Historisk", 27: "Skräck", 10402: "Musik",
+  9648: "Mystik", 10749: "Romantik", 878: "Science Fiction", 10770: "TV-film", 53: "Thriller",
+  10752: "Krig", 37: "Västern",
+};
+
+function loadMeta() {
+  const out = {};
+  let recs = [];
+  try {
+    recs = $app.findAllRecords("movie_meta");
+  } catch (_) {
+    return out;
+  }
+  for (const r of recs) {
+    out[r.getString("tmdb")] = { genres: readJson(r, "genres", []), overview: r.getString("overview_sv") };
+  }
+  return out;
+}
+
+// Körs varje minut: hämtar genrer och svensk beskrivning från TMDB för
+// filmer som inte har det sparat än, några i taget. Spelandet väntar aldrig på detta.
+function syncTmdbMeta() {
+  if (!hasTmdb()) return;
+  const lib = library();
+  const meta = loadMeta();
+  const todo = [];
+  const seen = {};
+  for (const m of lib) {
+    if (m.tmdb && !meta[m.tmdb] && !seen[m.tmdb]) { seen[m.tmdb] = true; todo.push(m.tmdb); }
+  }
+  if (!todo.length) return;
+
+  const col = $app.findCollectionByNameOrId("movie_meta");
+  const batch = intEnv("TMDB_SYNC_BATCH", 40);
+  let done = 0;
+  for (const id of todo.slice(0, batch)) {
+    let res;
+    try {
+      res = tmdbSend("/movie/" + id, {});
+    } catch (e) {
+      console.log("Filmkväll: TMDB gick inte att nå, försöker igen om en minut");
+      break;
+    }
+    if (res.statusCode !== 200 && res.statusCode !== 404) {
+      console.log("Filmkväll: TMDB svarade " + res.statusCode + ", försöker igen om en minut");
+      break;
+    }
+    const d = res.statusCode === 200 ? (res.json || {}) : {};
+    const r = new Record(col);
+    r.set("tmdb", id);
+    r.set("genres", (d.genres || []).map((g) => TMDB_GENRE_SV[g.id]).filter((g) => !!g));
+    r.set("overview_sv", String(d.overview || "").trim().slice(0, 600));
+    try {
+      $app.save(r);
+      done++;
+    } catch (_) {}
+  }
+  const left = todo.length - done;
+  if (done) console.log("Filmkväll: TMDB-metadata hämtad för " + done + " filmer, " + left + " kvar");
+  // När allt är klart: läs om biblioteket direkt så att nya genrer syns.
+  if (done && !left) $app.store().remove("filmkvall_library");
 }
 
 // ---------- Förslag ----------
@@ -289,7 +371,7 @@ function buildCandidates(people) {
   return picked.map((s) => {
     const m = s.movie;
     return {
-      id: m.id, title: m.title, year: m.year, overview: swedishOverview(m.tmdb) || m.overview, rating: m.rating,
+      id: m.id, title: m.title, year: m.year, overview: (m.metaChecked ? m.overviewSv : swedishOverview(m.tmdb)) || m.overview, rating: m.rating,
       age: m.age, genres: m.genres, runtime: m.runtime, poster: m.poster,
       because: s.because, genreMatches: s.genreMatches,
     };
@@ -532,5 +614,5 @@ function cleanup() {
 
 module.exports = {
   genres, hasTmdb, searchMovies, createRoom, joinRoom, findRoom, findMe,
-  savePrefs, startSwiping, swipe, finish, state, cleanup, setTheme,
+  savePrefs, startSwiping, swipe, finish, state, cleanup, setTheme, syncTmdbMeta,
 };

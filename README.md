@@ -91,6 +91,7 @@ Ta bort `/mnt/user/appdata/movienight/secret/secret.txt` (eller fyll i *Egen hem
 | `ROOM_TTL_HOURS` | 24 | Rum raderas efter så här många timmar |
 | `CANDIDATE_COUNT` | 25 | Antal filmer att swipa på |
 | `GENRE_WEIGHT` | 1 | Hur mycket genrer styr jämfört med favoriter (2 = mer genre, 0.5 = mer favoriter) |
+| `TMDB_SYNC_BATCH` | 40 | Hur många filmer per minut som får genrer och svensk beskrivning från TMDB i bakgrunden |
 | `APP_SECRET` | tom | Egen hemlig sökväg (annars slumpad) |
 
 ## Felsökning

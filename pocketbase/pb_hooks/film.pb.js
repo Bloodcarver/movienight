@@ -74,3 +74,7 @@ routerAdd("POST", "/api/film/rooms/{code}/finish", (e) => {
 cronAdd("filmkvall_cleanup", "*/15 * * * *", () => {
   require(`${__hooks}/film_lib.js`).cleanup();
 });
+
+cronAdd("filmkvall_tmdb_meta", "* * * * *", () => {
+  require(`${__hooks}/film_lib.js`).syncTmdbMeta();
+});
