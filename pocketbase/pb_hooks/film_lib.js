@@ -186,14 +186,6 @@ function swedishOverview(tmdbId) {
 
 // ---------- Förslag ----------
 
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const t = arr[i]; arr[i] = arr[j]; arr[j] = t;
-  }
-  return arr;
-}
-
 function buildCandidates(people) {
   const lib = library();
   if (!lib.length) throw new BadRequestError("Hittade inga filmer i Jellyfin.");
@@ -290,14 +282,18 @@ function buildCandidates(people) {
     picked = picked.concat(rest.slice(0, count - picked.length));
   }
 
-  return shuffle(picked.map((s) => {
+  // Swipeordning: bäst matchning först. Flest valda genrer, sedan poäng
+  // (som väger in både genrer och favoritrekommendationer).
+  picked.sort((a, b) => (b.genreMatches.length - a.genreMatches.length) || (b.score - a.score));
+
+  return picked.map((s) => {
     const m = s.movie;
     return {
       id: m.id, title: m.title, year: m.year, overview: swedishOverview(m.tmdb) || m.overview, rating: m.rating,
       age: m.age, genres: m.genres, runtime: m.runtime, poster: m.poster,
       because: s.because, genreMatches: s.genreMatches,
     };
-  }));
+  });
 }
 
 // ---------- Rum ----------
