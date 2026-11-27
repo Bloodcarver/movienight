@@ -234,7 +234,7 @@ function buildCandidates(people) {
       const hit = p.genres.filter((g) => m.genres.indexOf(g) >= 0);
       if (hit.length) {
         genrePeople++;
-        genreScore += 5 + Math.min(hit.length - 1, 2); // träff, lite extra för flera genrer
+        genreScore += 5 + 3 * Math.min(hit.length - 1, 2); // träff, klart extra om filmen passar flera valda genrer
       } else {
         genreScore -= 4; // personen valde genrer men filmen passar ingen av dem
       }
@@ -253,11 +253,37 @@ function buildCandidates(people) {
   });
 
   scored.sort((a, b) => b.score - a.score);
-  let picked = scored.filter((s) => s.relevant).slice(0, count);
+
+  // Genrekvot: varje vald genre får en garanterad andel av platserna, så att
+  // t.ex. Västern inte trängs undan av sci-fi som råkar matcha favoriterna.
+  // Filmer som passar flest valda genrer går först inom sin genre.
+  const chosen = [];
+  for (const p of people) for (const g of p.genres) if (chosen.indexOf(g) < 0) chosen.push(g);
+  let picked = [];
+  const used = {};
+  if (chosen.length) {
+    const perGenre = Math.max(2, Math.floor((count * 0.6) / chosen.length));
+    for (const g of chosen) {
+      const inGenre = scored
+        .filter((s) => !used[s.movie.id] && s.movie.genres.indexOf(g) >= 0)
+        .sort((a, b) => (b.genreMatches.length - a.genreMatches.length) || (b.score - a.score))
+        .slice(0, perGenre);
+      for (const s of inGenre) {
+        if (picked.length >= count) break;
+        used[s.movie.id] = true;
+        picked.push(s);
+      }
+    }
+  }
+  // Resten av platserna efter poäng.
+  for (const s of scored) {
+    if (picked.length >= count) break;
+    if (!s.relevant || used[s.movie.id]) continue;
+    used[s.movie.id] = true;
+    picked.push(s);
+  }
   if (picked.length < count) {
     // Fyll på med välbetygsatta filmer ur biblioteket.
-    const used = {};
-    for (const s of picked) used[s.movie.id] = true;
     const rest = scored
       .filter((s) => !used[s.movie.id])
       .sort((a, b) => ((b.movie.rating || 5) + Math.random() * 2) - ((a.movie.rating || 5) + Math.random() * 2));
