@@ -90,6 +90,7 @@ Ta bort `/mnt/user/appdata/movienight/secret/secret.txt` (eller fyll i *Egen hem
 | `TRUSTED_PROXY` | 172.16.0.0/12 | Vems `X-Forwarded-For` vi litar på (lägg till NPM:s IP) |
 | `ROOM_TTL_HOURS` | 24 | Rum raderas efter så här många timmar |
 | `CANDIDATE_COUNT` | 25 | Antal filmer att swipa på |
+| `GENRE_WEIGHT` | 1 | Hur mycket genrer styr jämfört med favoriter (2 = mer genre, 0.5 = mer favoriter) |
 | `APP_SECRET` | tom | Egen hemlig sökväg (annars slumpad) |
 
 ## Felsökning

@@ -25,7 +25,8 @@ ENV APP_VERSION=${APP_VERSION} \
     QR_ALLOWED_NETWORK=192.168.0.0/24 \
     TRUSTED_PROXY=172.16.0.0/12 \
     ROOM_TTL_HOURS=24 \
-    CANDIDATE_COUNT=25
+    CANDIDATE_COUNT=25 \
+    GENRE_WEIGHT=1
 
 VOLUME /data
 # 80 = appen, 8090 = PocketBase adminpanel (bara hemmanätet)
