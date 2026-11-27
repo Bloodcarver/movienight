@@ -198,6 +198,9 @@ function buildCandidates(people) {
   const lib = library();
   if (!lib.length) throw new BadRequestError("Hittade inga filmer i Jellyfin.");
   const count = intEnv("CANDIDATE_COUNT", 25);
+  // Hur mycket genrevalen styr jämfört med favoriterna. 1 = standard, 2 = mer genre, 0.5 = mer favoriter.
+  let genreWeight = parseFloat(env("GENRE_WEIGHT", "1"));
+  if (!(genreWeight >= 0)) genreWeight = 1;
 
   const byTmdb = {};
   for (const m of lib) if (m.tmdb) byTmdb[m.tmdb] = m;
@@ -225,12 +228,19 @@ function buildCandidates(people) {
     const recPeople = r ? Object.keys(r.people).length : 0;
     const genreMatches = {};
     let genrePeople = 0;
+    let genreScore = 0;
     for (const p of people) {
+      if (!p.genres.length) continue; // valde inga genrer: påverkar inte
       const hit = p.genres.filter((g) => m.genres.indexOf(g) >= 0);
-      if (hit.length) genrePeople++;
+      if (hit.length) {
+        genrePeople++;
+        genreScore += 5 + Math.min(hit.length - 1, 2); // träff, lite extra för flera genrer
+      } else {
+        genreScore -= 4; // personen valde genrer men filmen passar ingen av dem
+      }
       for (const g of hit) genreMatches[g] = true;
     }
-    let score = recPeople * 4 + (r ? Math.min(r.hits, 6) : 0) + genrePeople * 3 +
+    let score = recPeople * 3 + (r ? Math.min(r.hits, 4) : 0) + genreScore * genreWeight +
       (m.rating || 5) / 10 + Math.random() * 1.5;
     if (favTmdb[m.tmdb]) score -= 2; // någons favorit: okej, men lite lägre
     return {

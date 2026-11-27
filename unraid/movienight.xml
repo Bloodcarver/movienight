@@ -25,5 +25,6 @@
   <Config Name="Jellyfin användar-id" Target="JELLYFIN_USER_ID" Default="" Mode="" Description="Behövs bara om filmlistan blir tom." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
   <Config Name="Rummets livslängd (timmar)" Target="ROOM_TTL_HOURS" Default="24" Mode="" Description="" Type="Variable" Display="advanced" Required="false" Mask="false">24</Config>
   <Config Name="Antal filmer att swipa" Target="CANDIDATE_COUNT" Default="25" Mode="" Description="" Type="Variable" Display="advanced" Required="false" Mask="false">25</Config>
+  <Config Name="Genrevikt" Target="GENRE_WEIGHT" Default="1" Mode="" Description="Hur mycket genrevalen styr jämfört med favoritfilmerna. 2 = mer genre, 0.5 = mer favoriter." Type="Variable" Display="advanced" Required="false" Mask="false">1</Config>
   <Config Name="Egen hemlig sökväg" Target="APP_SECRET" Default="" Mode="" Description="Minst 12 tecken A-Z a-z 0-9. Tom = slumpas fram och sparas i /data/secret." Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
 </Container>
